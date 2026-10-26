@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% from "_macros.html" import ud, hook_cards, radar_table with context %}
+{% block title %}{{ title }} | {{ cfg.site_name }}{% endblock %}
+{% block desc %}{{ desc }}{% endblock %}
+{% block path %}/{{ key }}/{% endblock %}
+{% block main %}
+<section class="hero hero-sm radar-hero">
+  <div class="wrap">
+    <nav class="rtabs" aria-label="급등 레이더">{% for k, lb in radar_nav %}<a href="{{ base }}/{{ k }}/"{% if k == key %} class="on" aria-current="page"{% endif %}>{{ lb }}</a>{% endfor %}</nav>
+    <h1>{{ title.split(' (')[0] }}</h1>
+    <p class="lead">{{ base_date }} 장 마감 기준 · 매 거래일 자동 갱신</p>
+    <p class="rstats">{% for x in stats %}<span>{{ x }}</span>{% endfor %}</p>
+  </div>
+</section>
+<div class="wrap page">
+  {% for h, extra, rows, empty in sections %}
+  <section class="card">
+    <h2>{{ h }} <span class="muted small-inline">{{ rows | length }}개</span></h2>
+    {% if rows %}{{ radar_table(rows, base, extra) }}{% else %}<p class="muted">{{ empty }}</p>{% endif %}
+  </section>
+  {% endfor %}
+  <p class="muted small-note">거래량 배수 = 오늘 거래량 ÷ 최근 20거래일 평균 거래량. 급등 직후에는 변동성이 매우 커질 수 있습니다. 특정 종목의 매수·매도를 권유하지 않습니다.</p>
+  {{ hook_cards(base) }}
+</div>
+{% endblock %}
